@@ -1,0 +1,4 @@
+<root level="INFO">
+    <appender-ref ref="CONSOLE" /> <!-- Essential for Docker to grab your logs -->
+    <appender-ref ref="FILE" />    <!-- Optional persistent backup -->
+</root>

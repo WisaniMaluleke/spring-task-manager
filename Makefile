@@ -1,38 +1,20 @@
-build:
-	docker-compose build
+.PHONY: run down logs build test clean
 
 run:
-	docker-compose up --remove-orphans -d
-
-runvite:
-	docker exec simple-task-manager bash -c "npm run dev"
+	docker compose up --build
 
 down:
-	docker-compose down
+	docker compose down
 
-dbshow:
-	php artisan db:show
+logs:
+	docker compose logs -f app
 
-seed:
-	php artisan db:seed
+build:
+	docker compose build
 
-migrate:
-	docker exec crawler bash -c "php artisan migrate:fresh --seed"
+test:
+	mvn test
 
-clear:
-	php artisan optimize:clear
-
-permissions:
-	chmod 777 ~/development/learning/SimpleTaskManager && sudo chown wislim:wislim ~/development/learning/SimpleTaskManager
-
-storagelink:
-	docker exec crawler bash -c "php artisan storage:link"
-
-storagePermission:
-	sudo chmod -R 777 storage
-
-con:
-	docker exec -ti crawler bash
-
-stan:
-	./vendor/bin/phpstan analyse
+clean:
+	docker compose down -v --remove-orphans
+	mvn clean

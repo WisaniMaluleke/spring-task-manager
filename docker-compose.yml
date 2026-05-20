@@ -1,40 +1,123 @@
 version: '3.8'
 
 services:
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: simple-task-manager
-        ports:
-            - "8003:8000"
-            - "5173:5173"   # Vite HMR
-        volumes:
-            - .:/var/www/html
-            - vite-build:/var/www/html/public/build
-        depends_on:
-            - mongodb
-        environment:
-            DB_CONNECTION: mongodb
-            DB_HOST: mongodb
-            DB_PORT: 27017
-            DB_DATABASE: task_manager
-            DB_USERNAME: task_manager_user
-            DB_PASSWORD: 321manager321
 
-    mongodb:
-        image: mongo:6.0
-        container_name: mongodb
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: task_manager_user
-            MONGO_INITDB_ROOT_PASSWORD: 321manager321
-            MONGO_INITDB_DATABASE: task_manager
-        ports:
-            - "27010:27017"
-        volumes:
-            - mongo_data:/data/db
+  # ── Spring MVC App ──────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-docker-app
+    ports:
+      - "8040:8080"
+    volumes:
+      - ./docker-logs:/app/logs
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/wisdb
+      DB_USER: wisuser
+      DB_PASSWORD: wispass
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      app: "wisgeek-task-manager"
+      tier: "application"
+    networks:
+      - wisgeek-network
+
+  # ── PostgreSQL ───────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: wis-postgres
+    environment:
+      POSTGRES_DB: wisdb
+      POSTGRES_USER: wisuser
+      POSTGRES_PASSWORD: wispass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wisuser -d wisdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    labels:
+      app: "postgres-database"
+      tier: "database"
+    networks:
+      - wisgeek-network
+
+  # ── AdminerDB (PostgreSQL UI) ────────────────────────────────
+  adminer:
+    image: adminer:latest
+    container_name: wis-adminer
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DESIGN: dracula
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - wisgeek-network
+
+  # ── Grafana Loki (Log Aggregator) ───────────────────────────
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: wis-loki
+    ports:
+      - "3100:3100"
+    # FIXED: Single line prevents formatting bugs, explicitly forcing the config target
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - wisgeek-network
+
+  # ── Promtail (Automatic Log Shipping Agent) ─────────────────
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: wis-promtail
+    # FIXED: Gives Promtail permission to read docker.sock and log directories
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./promtail-config.yaml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    restart: unless-stopped
+    networks:
+      - wisgeek-network
+
+  # ── Grafana GUI Dashboard ───────────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: wis-grafana-gui
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - loki
+    restart: unless-stopped
+    networks:
+      wisgeek-network:
+        aliases:
+          - grafana-gui
 
 volumes:
-    mongo_data:
-    vite-build:
+  postgres_data:
+  grafana_data:
+
+# Explicit network ensures instant DNS name mapping resolution
+networks:
+  wisgeek-network:
+    driver: bridge
