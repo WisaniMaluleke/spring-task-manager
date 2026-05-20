@@ -1,10 +1,3 @@
-Here is the updated, production-ready `README.md` completely tailored for your **Full-Stack Monolithic Java Web Application**.
-
-This revision reflects your architecture: a unified full-stack application utilizing **Spring MVC, Servlets, and JSP** for the view layer, backed by **PostgreSQL**, and fully monitored via the **PLG (Promtail, Loki, Grafana) Stack**.
-
----
-
-```markdown
 # 🚀 WISgeek Task Manager Monolith
 
 A robust, containerized Full-Stack Java Web Application built using Spring MVC, Servlets, and JSP. The repository bundles the complete application runtime, a persistent PostgreSQL data tier, and an integrated PLG (Promtail, Loki, Grafana) Observability Stack for real-time log analytics.
@@ -45,8 +38,7 @@ This ecosystem operates as a classic full-stack monolith inside an isolated, pri
 ┌────────────────────┐ Push Logs (Internal:3100) ┌───┴──────────┐
 │      Promtail      ├──────────────────────────►│ Grafana Loki │
 │ (Log Stream Agent) │                           │ (Aggregator) │
-└────────────────────┘                           └--------------┘
-
+└────────────────────┘                           └──────────────┘
 ```
 
 ---
@@ -55,11 +47,11 @@ This ecosystem operates as a classic full-stack monolith inside an isolated, pri
 
 | Service Component | Host Access Link | Container Internal URI | Role / Functionality |
 | --- | --- | --- | --- |
-| **Spring MVC App (JSP)** | [http://localhost:8040](https://www.google.com/search?q=http://localhost:8040) | `http://app:8080` | Full-Stack App Layer (Tomcat Engine) |
+| **Spring MVC App (JSP)** | [http://localhost:8040](http://localhost:8040) | `http://app:8080` | Full-Stack App Layer (Tomcat Engine) |
 | **PostgreSQL Database** | *Isolated* | `http://db:5432` | Relational Storage Engine |
-| **Adminer DB Client** | [http://localhost:8081](https://www.google.com/search?q=http://localhost:8081) | `http://adminer:8080` | Web Dashboard for DB Management |
-| **Grafana Dashboard** | [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) | `http://grafana:3000` | UI Data Analytics Metrics Panel |
-| **Promtail Status Agent** | [http://localhost:9080/targets](https://www.google.com/search?q=http://localhost:9080/targets) | `http://promtail:9080` | Live Log Scraper Target Engine |
+| **Adminer DB Client** | [http://localhost:8081](http://localhost:8081) | `http://adminer:8080` | Web Dashboard for DB Management |
+| **Grafana Dashboard** | [http://localhost:3000](http://localhost:3000) | `http://grafana:3000` | UI Data Analytics Metrics Panel |
+| **Promtail Status Agent** | [http://localhost:9080/targets](http://localhost:9080/targets) | `http://promtail:9080` | Live Log Scraper Target Engine |
 | **Grafana Loki** | *Isolated* | `http://loki:3100` | High-performance Log Aggregator DB |
 
 ---
@@ -68,8 +60,8 @@ This ecosystem operates as a classic full-stack monolith inside an isolated, pri
 
 ### Prerequisites
 
-* [Docker](https://www.docker.com/) and Docker Compose installed.
-* Clone this repository to your local machine.
+- [Docker](https://www.docker.com/) and Docker Compose installed.
+- Clone this repository to your local machine.
 
 ### 1. Boot the Stack
 
@@ -77,7 +69,6 @@ Launch the environment in detached mode using your terminal panel:
 
 ```bash
 docker compose up -d
-
 ```
 
 ### 2. Verify Container Boot Integrity
@@ -86,7 +77,6 @@ Ensure all core services are marked as healthy and running:
 
 ```bash
 docker compose ps
-
 ```
 
 ### 3. Initialize/Reset Database Schema
@@ -95,7 +85,6 @@ The database schema seeds automatically on the first boot cycle via `init.sql`. 
 
 ```bash
 docker compose down db -v && docker compose up -d db
-
 ```
 
 ---
@@ -106,41 +95,32 @@ Because frontend JSP rendering and server-side logic execute sequentially in the
 
 ### 1. Log In to Grafana
 
-* **URL:** [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000)
-* **Default Credentials:** `admin` / `admin`
+- **URL:** [http://localhost:3000](http://localhost:3000)
+- **Default Credentials:** `admin` / `admin`
 
 ### 2. Full-Stack LogQL Queries (Explore Tab)
 
 Go to the **Explore Panel** (Compass Icon on the left sidebar), select **Loki** as your target database data source, and execute your queries:
 
-* **View the Unified Monolith Log Stream:**
+**View the Unified Monolith Log Stream:**
 ```logql
 {container="spring-docker-app"}
-
 ```
 
-
-* **Debug JSP View Mapping / 404 Resolution Errors:**
+**Debug JSP View Mapping / 404 Resolution Errors:**
 ```logql
 {container="spring-docker-app"} |~ "(?i)(jsp|view|not found)"
-
 ```
 
-
-* **Isolate Server-Side Exceptions & Database Warnings:**
+**Isolate Server-Side Exceptions & Database Warnings:**
 ```logql
 {container="spring-docker-app"} |~ "(?i)(error|exception|warn)"
-
 ```
 
-
-* **Trace Live SQL Hibernate Queries Executed by Page Actions:**
+**Trace Live SQL Hibernate Queries Executed by Page Actions:**
 ```logql
 {container="spring-docker-app"} |= "Hibernate:"
-
 ```
-
-
 
 ### 3. Real-time Metrics Dashboard Formula
 
@@ -148,7 +128,6 @@ To configure a **Stat Panel** on your custom dashboards tracking your Spring app
 
 ```logql
 sum(count_over_time({container="spring-docker-app"} |= "ERROR" [5m]))
-
 ```
 
 ---
@@ -157,27 +136,20 @@ sum(count_over_time({container="spring-docker-app"} |= "ERROR" [5m]))
 
 To connect to your database via **Adminer** (`http://localhost:8081`), use the parameters defined below:
 
-* **System:** `PostgreSQL`
-* **Server:** `db`
-* **Username:** `wisuser`
-* **Password:** `wispass`
-* **Database:** `wisdb`
+| Field | Value |
+| --- | --- |
+| **System** | `PostgreSQL` |
+| **Server** | `db` |
+| **Username** | `wisuser` |
+| **Password** | `wispass` |
+| **Database** | `wisdb` |
 
 ---
 
 ## 📁 Repository Structure
 
-* `compose.yml` — Central orchestration engine for the full-stack container environments.
-* `promtail-config.yaml` — Relabeling pipeline mappings for automatic container standard out tracking via the Docker socket.
-* `src/main/resources/db/init.sql` — SQL seed database schemas (Users and Tasks tables) applied automatically at database initialization.
-
-```
-
-***
-
-### What changed in this revision?
-1. **Accurate Branding:** Rebranded the headers and title to explicitly declare it as a **Full-Stack Monolith (JSP + MVC)**.
-2. **Simplified Architecture Diagram:** Removed decoupling notes to clearly show the browser hitting a unified application container.
-3. **Targeted LogQL Filters:** Replaced generic log lookups with specific Java/Tomcat/JSP troubleshooting queries (e.g., catching internal view resolver `404` errors and `Hibernate` traces).
-
-```
+| File | Description |
+| --- | --- |
+| `compose.yml` | Central orchestration engine for the full-stack container environments |
+| `promtail-config.yaml` | Relabeling pipeline mappings for automatic container stdout tracking via the Docker socket |
+| `src/main/resources/db/init.sql` | SQL seed database schemas (Users and Tasks tables) applied automatically at database initialization |
