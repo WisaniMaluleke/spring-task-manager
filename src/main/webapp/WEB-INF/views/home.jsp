@@ -54,7 +54,6 @@
         .fade-up-2 { animation: fadeUp 0.5s 0.1s ease forwards; opacity: 0; }
         .fade-up-3 { animation: fadeUp 0.5s 0.2s ease forwards; opacity: 0; }
 
-        /* Hide default scrollbars for elegant card layout tracking */
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
@@ -96,9 +95,9 @@
     </nav>
 
     <main class="flex flex-col flex-1 w-full min-h-0 gap-8 px-6 py-6 mx-auto overflow-y-auto md:flex-row max-w-7xl md:overflow-hidden">
-        
-        <section class="flex flex-col justify-center flex-1 min-w-0 py-4 md:py-0 fade-up">
-            <div class="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full px-3.5 py-1 text-base font-medium text-indigo-300 w-fit mb-6">
+
+        <section class="flex flex-col justify-center flex-1 min-w-0 py-4 md:py-0 fade-up md:h-full">
+            <div class="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full px-3.5 py-1 text-[10px] font-medium text-indigo-300 w-fit mb-6">
                 <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
                 Full-Stack Monolith Ecosystem
             </div>
@@ -136,14 +135,13 @@
                 </div>
             </div>
         </section>
-
-        <section id="stack" class="flex-1 flex flex-col min-h-0 min-w-0 bg-white/[0.02] border border-white/10 rounded-2xl p-5 fade-up-3">
+        <section class="flex flex-col justify-center flex-1 min-w-0 py-4 md:py-0 fade-up md:h-full">
             <div class="mb-4 shrink-0">
                 <h2 class="mb-1 text-xl font-bold font-display">Architecture Components</h2>
-                <p class="text-base text-white/85">Every service module integrated into a unified network domain.</p>
+                <p class="text-[12px] text-white/85">Every service module integrated into a unified network domain.</p>
             </div>
-            
-            <div class="flex-1 pr-1 space-y-3 md:overflow-y-auto custom-scrollbar">
+
+            <div class="items-center min-h-0 pr-1 space-y-3 md:overflow-y-auto custom-scrollbar">
 
                 <div class="flex items-start gap-4 p-4 border bg-white/5 border-white/10 rounded-xl card-hover">
                     <div class="flex items-center justify-center w-10 h-10 border rounded-xl bg-blue-500/10 border-blue-500/20 shrink-0">
@@ -152,9 +150,9 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-[20px] font-bold text-blue-400 uppercase tracking-wider mb-0.5">Database Manager</div>
+                        <div class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-0.5">Database Manager</div>
                         <div class="mb-1 text-base font-semibold font-display">AdminerDB Engine</div>
-                        <p class="text-base leading-relaxed text-white/85">Direct runtime visibility into the local PostgreSQL cluster exposed securely at port 8081.</p>
+                        <p class="text-[13px] leading-relaxed text-white/85">Direct runtime visibility into the local PostgreSQL cluster exposed securely at port 8081.</p>
                     </div>
                 </div>
 
@@ -165,9 +163,9 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-[20px] font-bold text-green-400 uppercase tracking-wider mb-0.5">API Specification</div>
+                        <div class="text-[10px] font-bold text-green-400 uppercase tracking-wider mb-0.5">API Specification</div>
                         <div class="mb-1 text-base font-semibold font-display">Springdoc OpenAPI Blueprint</div>
-                        <p class="text-base leading-relaxed text-white/85">Automated live endpoint scanning documentation mapped directly to standard app controllers.</p>
+                        <p class="text-[13px] leading-relaxed text-white/85">Automated live endpoint scanning documentation mapped directly to standard app controllers.</p>
                     </div>
                 </div>
 
@@ -178,9 +176,9 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-[20px] font-bold text-yellow-400 uppercase tracking-wider mb-0.5">Quality Assurance</div>
+                        <div class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider mb-0.5">Quality Assurance</div>
                         <div class="mb-1 text-base font-semibold font-display">JUnit 5 & Integration Tests</div>
-                        <p class="text-base leading-relaxed text-white/85">Comprehensive testing layer parsing validation constraints, services logic, and repository endpoints.</p>
+                        <p class="text-[13px] leading-relaxed text-white/85">Comprehensive testing layer parsing validation constraints, services logic, and repository endpoints.</p>
                     </div>
                 </div>
 
@@ -191,9 +189,9 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-[20px] font-bold text-purple-400 uppercase tracking-wider mb-0.5">Log Telemetry</div>
+                        <div class="text-[10px] font-bold text-purple-400 uppercase tracking-wider mb-0.5">Log Telemetry</div>
                         <div class="mb-1 text-base font-semibold font-display">Grafana Loki & Promtail Stack</div>
-                        <p class="text-base leading-relaxed text-white/85">Automatic container logging runtime capturing container console stdout traces via standard Docker sockets.</p>
+                        <p class="text-[13px] leading-relaxed text-white/85">Automatic container logging runtime capturing container console stdout traces via standard Docker sockets.</p>
                     </div>
                 </div>
 
@@ -204,9 +202,9 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-[20px] font-bold text-red-400 uppercase tracking-wider mb-0.5">Server Architecture</div>
+                        <div class="text-[10px] font-bold text-red-400 uppercase tracking-wider mb-0.5">Server Architecture</div>
                         <div class="mb-1 text-base font-semibold font-display">Spring MVC & Embedded Tomcat</div>
-                        <p class="text-base leading-relaxed text-white/85">Server-side template parsing engine combining model context objects directly into compiled views.</p>
+                        <p class="text-[13px] leading-relaxed text-white/85">Server-side template parsing engine combining model context objects directly into compiled views.</p>
                     </div>
                 </div>
 
@@ -215,7 +213,7 @@
     </main>
 
     <footer class="border-t border-white/10 bg-black/20 shrink-0">
-        <div class="flex items-center justify-between px-6 py-4 mx-auto text-base max-w-7xl text-white/85">
+        <div class="flex items-center justify-between px-6 py-4 mx-auto text-[13px] max-w-7xl text-white/85">
             <span class="font-display">WIS<span class="text-indigo-400">Platform</span></span>
             <span>Spring MVC · JSP · PostgreSQL · Grafana Loki · Docker</span>
         </div>
